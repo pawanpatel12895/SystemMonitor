@@ -12,13 +12,16 @@ import org.hyperic.sigar.*;
  */
 public class SystemMonitor extends javax.swing.JFrame {
 
+    
+
     /**
      * Creates new form SystemMonitor
      */
     public SystemMonitor() {
         initComponents();
-        setVisible(true);
         setTitle("System Monitor");
+        setVisible(true);
+
     }
 
     /**
@@ -59,7 +62,7 @@ public class SystemMonitor extends javax.swing.JFrame {
 
         ProcessParentPanel.setBackground(new java.awt.Color(254, 254, 254));
 
-        jLabel4.setText("Process");
+        jLabel4.setText("Process                        Command");
 
         ProcessPanel.setBackground(new java.awt.Color(249, 244, 238));
 
@@ -91,9 +94,9 @@ public class SystemMonitor extends javax.swing.JFrame {
 
         jLabel7.setText("Tx");
 
-        NetworkTransmitted.setText("jLabel8");
+        NetworkTransmitted.setText("0 b/s");
 
-        NetworkRecieve.setText("jLabel9");
+        NetworkRecieve.setText("0 b/s");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -180,21 +183,22 @@ public class SystemMonitor extends javax.swing.JFrame {
             
             Sigar sigar = new Sigar();
             NetworkData networkData = new NetworkData(sigar);
-                
+            ProcessesInfo processesInfo = new ProcessesInfo(sigar);
+            
             SystemMonitor systemMonitor = new SystemMonitor();
             systemMonitor.ProgressBarFileSystemUsage.setStringPainted(true);
             systemMonitor.ProgressBarSystemMemory.setStringPainted(true);
             systemMonitor.ProgressBarCPU.setStringPainted(true);
             systemMonitor.TextAreaProcess.setEditable(false);
+            systemMonitor.test(sigar);
             while(true)
             {   Mem mem = sigar.getMem();
                 CpuPerc cpuTimer = sigar.getCpuPerc();
                 FileSystemUsage filesystemusage = sigar.getFileSystemUsage("/");
-                long[] proc = sigar.getProcList();
                 Long[] metric = networkData.getMetric();
+                String[] Proc = processesInfo.getProcessList();
             
-            
-            
+                
                 System.out.println("Memory "+mem.getUsedPercent());
                 System.out.println("CPU "+cpuTimer.getCombined()*100);
                 System.out.println("Rx " + Sigar.formatSize(metric[0])+ "\tTx "+Sigar.formatSize(metric[1]));
@@ -205,21 +209,7 @@ public class SystemMonitor extends javax.swing.JFrame {
                 systemMonitor.TextAreaProcess.setText("");
                 systemMonitor.NetworkRecieve.setText(Sigar.formatSize(metric[0]) + "/s");
                 systemMonitor.NetworkTransmitted.setText(Sigar.formatSize(metric[1]) + "/s");
-                /*
-                String A = "";
-                for(long L:proc)
-                {   
-                    A+=L+"\n";
-                    String[] S = sigar.getProcArgs(L);
-                   
-                    System.out.println("..."+L);
-                    for (String s:S)
-                        System.out.print(s+"\t");
-                    System.out.println();
-                }
-                systemMonitor.TextAreaProcess.setText(A);
-             //   System.out.println(A);
-                */
+                systemMonitor.TextAreaProcess.setText(getString(Proc));
                 TimeUnit.SECONDS.sleep(1);
             }
 
@@ -246,4 +236,16 @@ public class SystemMonitor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollBar jScrollBar1;
     // End of variables declaration//GEN-END:variables
+
+    private static String getString(String[] Proc) 
+    {      String A = "";   
+        for(int i=0;i<Proc.length;++i)
+            A+=Proc[i]+"\n";
+        return A;
+    
+    }  
+
+    private void test(Sigar sigar) {
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
