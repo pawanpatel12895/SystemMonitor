@@ -190,13 +190,13 @@ public class SystemMonitor extends javax.swing.JFrame {
             systemMonitor.ProgressBarSystemMemory.setStringPainted(true);
             systemMonitor.ProgressBarCPU.setStringPainted(true);
             systemMonitor.TextAreaProcess.setEditable(false);
-            systemMonitor.test(sigar);
+     //       systemMonitor.test(sigar);
             while(true)
             {   Mem mem = sigar.getMem();
                 CpuPerc cpuTimer = sigar.getCpuPerc();
                 FileSystemUsage filesystemusage = sigar.getFileSystemUsage("/");
                 Long[] metric = networkData.getMetric();
-                String[] Proc = processesInfo.getProcessList();
+                String[] ProcInfo = processesInfo.getProcessList();
             
                 
                 System.out.println("Memory "+mem.getUsedPercent());
@@ -209,7 +209,7 @@ public class SystemMonitor extends javax.swing.JFrame {
                 systemMonitor.TextAreaProcess.setText("");
                 systemMonitor.NetworkRecieve.setText(Sigar.formatSize(metric[0]) + "/s");
                 systemMonitor.NetworkTransmitted.setText(Sigar.formatSize(metric[1]) + "/s");
-                systemMonitor.TextAreaProcess.setText(getString(Proc));
+                systemMonitor.TextAreaProcess.setText(getString(ProcInfo));
                 TimeUnit.SECONDS.sleep(1);
             }
 
@@ -245,7 +245,5 @@ public class SystemMonitor extends javax.swing.JFrame {
     
     }  
 
-    private void test(Sigar sigar) {
-       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
 }
